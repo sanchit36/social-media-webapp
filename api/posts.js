@@ -40,11 +40,11 @@ router.get("/", authMiddleware, async (req, res) => {
 
   try {
     const number = Number(pageNumber);
-    const skips = size * (number - 1);
     const size = 8;
+    const skips = size * (number - 1);
     const { userId } = req;
 
-    const loggedUser = await User.findOne({ user: userId }).select(
+    const loggedUser = await FollowerModel.findOne({ user: userId }).select(
       "-followers"
     );
 
