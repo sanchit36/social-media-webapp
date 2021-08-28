@@ -6,6 +6,7 @@ const FollowerModel = require("../models/FollowerModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
+const NotificationModel = require("../models/NotificationModel");
 const userPng =
   "https://res.cloudinary.com/indersingh/image/upload/v1593464618/App/user_mklcpl.png";
 
@@ -80,7 +81,8 @@ router.post("/", async (req, res) => {
 
     await new ProfileModel(profileFields).save();
     await new FollowerModel({ user: user._id, followers: [], following: [] }).save();
-
+    await new NotificationModel({ user: user._id, notification:[]}).save();
+    
     const payload = { userId: user._id };
     jwt.sign(payload, process.env.jwtSecret, { expiresIn: "2d" }, (err, token) => {
       if (err) throw err;
