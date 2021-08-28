@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { List, Divider, Message, Checkbox, Form, Button } from "semantic-ui-react";
+import {
+  List,
+  Divider,
+  Message,
+  Checkbox,
+  Form,
+  Button,
+} from "semantic-ui-react";
 import { passwordUpdate, toggleMessagePopup } from "../../utils/profileActions";
 
 function Settings({ newMessagePopup }) {
@@ -53,7 +60,11 @@ function Settings({ newMessagePopup }) {
         <Divider />
 
         <List.Item>
-          <List.Icon name="paper plane outline" size="large" verticalAlign="middle" />
+          <List.Icon
+            name="paper plane outline"
+            size="large"
+            verticalAlign="middle"
+          />
 
           <List.Content>
             <List.Header
@@ -63,18 +74,27 @@ function Settings({ newMessagePopup }) {
             />
           </List.Content>
 
-          <div style={{ marginTop: "10px" }}>
-            Control whether a Popup should appear when there is a New Message or not.
-            <br />
-            <br />
-            <Checkbox
-              checked={popupSetting}
-              toggle
-              onChange={() =>
-                toggleMessagePopup(popupSetting, setPopupSetting, setSuccess)
-              }
-            />
-          </div>
+          {newMessageSettings && (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginTop: "10px",
+              }}
+            >
+              <Checkbox
+                checked={popupSetting}
+                toggle
+                onChange={() =>
+                  toggleMessagePopup(popupSetting, setPopupSetting, setSuccess)
+                }
+              />
+              <span style={{ marginLeft: "10px" }}>
+                Control whether a Popup should appear when there is a New
+                Message or not.
+              </span>
+            </div>
+          )}
         </List.Item>
 
         <Divider />
@@ -89,20 +109,23 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
 
   const [userPasswords, setUserPasswords] = useState({
     currentPassword: "",
-    newPassword: ""
+    newPassword: "",
+    confirmPassword: "",
   });
+
   const [typed, showTyped] = useState({
     field1: false,
-    field2: false
+    field2: false,
+    field3: false,
   });
 
-  const { field1, field2 } = typed;
+  const { field1, field2, field3 } = typed;
 
-  const { currentPassword, newPassword } = userPasswords;
+  const { currentPassword, newPassword, confirmPassword } = userPasswords;
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setUserPasswords(prev => ({ ...prev, [name]: value }));
+    setUserPasswords((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
@@ -114,8 +137,13 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
       <Form
         error={errorMsg !== null}
         loading={loading}
-        onSubmit={async e => {
+        onSubmit={async (e) => {
           e.preventDefault();
+
+          if (confirmPassword !== newPassword) {
+            return setError("Password does not match!");
+          }
+
           setLoading(true);
 
           await passwordUpdate(setSuccess, userPasswords);
@@ -132,7 +160,8 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
                 name: "eye",
                 circular: true,
                 link: true,
-                onClick: () => showTyped(prev => ({ ...prev, field1: !field1 }))
+                onClick: () =>
+                  showTyped((prev) => ({ ...prev, field1: !field1 })),
               }}
               type={field1 ? "text" : "password"}
               iconPosition="left"
@@ -149,7 +178,8 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
                 name: "eye",
                 circular: true,
                 link: true,
-                onClick: () => showTyped(prev => ({ ...prev, field2: !field2 }))
+                onClick: () =>
+                  showTyped((prev) => ({ ...prev, field2: !field2 })),
               }}
               type={field2 ? "text" : "password"}
               iconPosition="left"
@@ -160,10 +190,33 @@ const UpdatePassword = ({ setSuccess, showPasswordFields }) => {
               value={newPassword}
             />
 
+            <Form.Input
+              fluid
+              icon={{
+                name: "eye",
+                circular: true,
+                link: true,
+                onClick: () =>
+                  showTyped((prev) => ({ ...prev, field3: !field3 })),
+              }}
+              type={field3 ? "text" : "password"}
+              iconPosition="left"
+              label="Confirm Password"
+              placeholder="Enter Confirm Password"
+              name="confirmPassword"
+              onChange={handleChange}
+              value={confirmPassword}
+            />
+
             {/* BUTTONS */}
 
             <Button
-              disabled={loading || currentPassword === "" || newPassword === ""}
+              disabled={
+                loading ||
+                currentPassword === "" ||
+                newPassword === "" ||
+                confirmPassword === ""
+              }
               compact
               icon="configure"
               type="submit"

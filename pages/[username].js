@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
-import baseUrl from "../../utils/baseUrl";
+import baseUrl from "../utils/baseUrl";
 import { parseCookies } from "nookies";
 import { Grid } from "semantic-ui-react";
-import { NoProfilePosts, NoProfile } from "../../components/Layout/NoData";
-import CardPost from "../../components/Post/CardPost";
+import { NoProfilePosts, NoProfile } from "../components/Layout/NoData";
+import CardPost from "../components/Post/CardPost";
 import cookie from "js-cookie";
-import { PlaceHolderPosts } from "../../components/Layout/PlaceHolderGroup";
-import ProfileMenuTabs from "../../components/Profile/ProfileMenuTabs";
-import ProfileHeader from "../../components/Profile/ProfileHeader";
-import Followers from "../../components/Profile/Followers";
-import Following from "../../components/Profile/Following";
-import UpdateProfile from "../../components/Profile/UpdateProfile";
-import Settings from "../../components/Profile/Settings";
-import { PostDeleteToastr } from "../../components/Layout/Toastr";
+import { PlaceHolderPosts } from "../components/Layout/PlaceHolderGroup";
+import ProfileMenuTabs from "../components/Profile/ProfileMenuTabs";
+import ProfileHeader from "../components/Profile/ProfileHeader";
+import Followers from "../components/Profile/Followers";
+import Following from "../components/Profile/Following";
+import UpdateProfile from "../components/Profile/UpdateProfile";
+import Settings from "../components/Profile/Settings";
+import { PostDeleteToastr } from "../components/Layout/Toastr";
 
 function ProfilePage({
   errorLoading,
